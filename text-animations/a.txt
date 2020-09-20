@@ -1,0 +1,79 @@
+import gsap from 'gsap';
+const content = [
+	'Hi',
+	'THIS',
+	'IS',
+	'GONNA',
+	'ROCK',
+	'YOU'
+];
+let animation = gsap.timeline();
+function App() {
+	const heroText = useRef();
+	useEffect(() => {
+		content.forEach((word) => {
+			const d = document.createElement('div');
+			d.textContent = word;
+			heroText.current.appendChild(d);
+		});
+		let layers = document.querySelectorAll('.hide-layer div');
+		// console.log(layers);
+		layers.forEach((layer, index) => {
+			animation.fromTo(
+				layer,
+				{ opacity: 0, scale: 0 },
+				{ scale: 1, opacity: 1, repeat: 1, yoyo: true, yoyoEase: true, repeatDelay: 0.3 }
+			);
+		});
+		gsap.set('.hide-layer', { visibility: 'visible' });
+		animation.to('.cover', { y: '-100vh' });
+	}, []);
+	return (
+		<React.Fragment>
+			<Router history={history}>
+				<div className="cover">
+					<div className="hide-layer" ref={heroText} />
+				</div>
+				<Header heading="StreamSaga" slogan="Stream like a pro!!!" />
+				<div>
+					<Switch>
+						{' '}
+						<Route path="/" exact component={StreamList} />
+						<Route path="/streams/new" exact component={StreamCreate} />
+						<Route path="/streams/edit/:id" exact component={StreamEdit} />
+						<Route path="/streams/delete/:id" exact component={StreamDelete} />
+						<Route path="/streams/:id" exact component={StreamShow} />
+					</Switch>
+				</div>
+			</Router>
+		</React.Fragment>
+	);
+}
+
+export default App;
+
+
+.cover {
+	position: relative;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: black;
+	z-index: 1031;
+}
+
+.hide-layer {
+	visibility: hidden;
+}
+
+.cover div {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: white;
+	font-size: 8rem;
+	z-index: 1033;
+	display: inline-block;
+}
